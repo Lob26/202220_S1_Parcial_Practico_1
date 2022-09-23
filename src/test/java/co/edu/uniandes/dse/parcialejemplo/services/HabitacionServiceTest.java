@@ -18,21 +18,21 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @Transactional
-@Import(HotelService.class)
-class HotelServiceTest {
+@Import(HabitacionService.class)
+class HabitacionServiceTest {
     @Autowired
-    private HotelService hotelService;
+    private HabitacionService habitacionService;
     @Autowired
     private TestEntityManager entityManager;
     private PodamFactory factory = new PodamFactoryImpl();
 
-    private List<HotelEntity> hoteles = new ArrayList<>();
+    private List<HabitacionEntity> habitaciones = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -53,36 +53,34 @@ class HotelServiceTest {
 
             hotel.getHabitaciones().add(habitacion);
             habitacion.setHotel(hotel);
-            hoteles.add(hotel);
+            habitaciones.add(habitacion);
         }
     }
 
     @Test
-    void testCreateHotelesValid() throws IllegalOperationException {
-        HotelEntity entity, newEntity;
-        List<HotelEntity> list1 = new ArrayList<>();
-        List<HotelEntity> list2 = new ArrayList<>();
-        entity = factory.manufacturePojo(HotelEntity.class);
-        newEntity = factory.manufacturePojo(HotelEntity.class);
-        list1.add(entity); list1.add(newEntity);
-        list2 = hotelService.createHoteles(list1);
+    void testCreateHabitacionValid() throws IllegalOperationException {
+        HabitacionEntity entity, result, temp;
+        entity = factory.manufacturePojo(HabitacionEntity.class);
+        temp = habitacionService.createHabitacion(entity);
+        assertNotNull(temp);
+        result = entityManager.find(HabitacionEntity.class, temp.getId());
 
-        assertEquals(list1, list2);
+        assertEquals(entity.getId(), result.getId());
+        assertEquals(entity.getIdNumRoom(), result.getIdNumRoom());
+        assertEquals(entity.getHotel(), result.getHotel());
+        assertEquals(entity.getNumBed(), result.getNumBed());
+        assertEquals(entity.getNumBath(), result.getNumBath());
+        assertEquals(entity.getNumPeople(), result.getNumPeople());
     }
 
     @Test
-    void testCreateHotelesInvalid() {
+    void testCreateHabitacionInvalid() {
         assertThrows(IllegalOperationException.class, () -> {
-            String name = "Generico";
-            List<HotelEntity> list = new ArrayList<>();
-            HotelEntity pojo1 = factory.manufacturePojo(HotelEntity.class);
-            HotelEntity pojo2 = factory.manufacturePojo(HotelEntity.class);
-
-            pojo1.setName(name); pojo2.setName(name);
-            list.add(pojo1); list.add(pojo2);
-
-            hotelService.createHoteles(list);
+            int value = 5;
+            HabitacionEntity entity = factory.manufacturePojo(HabitacionEntity.class);
+            entity.setNumBed(2*value);
+            entity.setNumPeople(value);
+            habitacionService.createHabitacion(entity);
         });
-
     }
 }
