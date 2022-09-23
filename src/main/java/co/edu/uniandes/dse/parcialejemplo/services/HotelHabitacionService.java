@@ -16,9 +16,9 @@ import java.util.Optional;
 @Service
 public class HotelHabitacionService {
     @Autowired
-    HabitacionRepository habitacionRepository;
+    private HabitacionRepository habitacionRepository;
     @Autowired
-    HotelRepository hotelRepository;
+    private HotelRepository hotelRepository;
 
     @Transactional
     public HabitacionEntity addHabitacion(Long idHotel, Long idHabitacion) throws EntityNotFoundException {

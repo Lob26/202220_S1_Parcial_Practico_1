@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class HabitacionService {
     @Autowired
-    HabitacionRepository habitacionRepository;
+    private HabitacionRepository habitacionRepository;
 
     @Transactional
     public HabitacionEntity createHabitacion(HabitacionEntity habitacion) throws IllegalOperationException {

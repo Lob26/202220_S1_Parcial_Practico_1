@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 public class HotelService {
     @Autowired
-    HotelRepository hotelRepository;
+    private HotelRepository hotelRepository;
 
     @Transactional
     public List<HotelEntity> createHoteles(List<HotelEntity> hoteles) throws IllegalOperationException {
